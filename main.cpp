@@ -1,36 +1,56 @@
 #include <iostream>
 #include <fstream>
-#include <string>
+#include "descompresion.h"
 
 using namespace std;
 
-int main()
-{
-    ifstream archivo;
-    string linea;
-    int tam = 0;
-
-    archivo.open("Encriptado1.txt");  //Abrir el archivo para lectura
+int main() {
+    ifstream archivo("Encriptado1.txt");
     if (!archivo.is_open()) {
         cout << "Falla al abrir el archivo." << endl;
-        return 1;  // Exit the program with an error code
+        return 1;
     }
-    archivo.seekg(0, archivo.end);
-    tam = archivo.tellg();
-    archivo.seekg(0, archivo.beg);
-    cout << "Este es el tamanio: " << tam << endl;
 
-    string *archi = new string[tam];
+    // Reservamos buffer temporal para cada línea
+    const int MAX_LINE = 1024;
+    char* linea = new char[MAX_LINE];
 
-    while (getline(archivo, linea)) { // Lee línea por línea
-        *archi += linea;
-        //cout << linea << endl; // Muestra la línea en la consola
+    // Para guardar todo el archivo en memoria
+    int capacity = 4096;
+    char* contenido = new char[capacity];
+    int length = 0;
+
+    cout << "Contenido del archivo línea por línea:" << endl;
+
+    while (archivo.getline(linea, MAX_LINE)) {
+        cout << linea << endl;
+
+        int len = 0;
+        while (linea[len] != '\0') len++;
+
+        // Asegurar espacio suficiente en 'contenido'
+        if (length + len >= capacity) {
+            capacity *= 2;
+            char* tmp = new char[capacity];
+            for (int i = 0; i < length; i++) tmp[i] = contenido[i];
+            delete[] contenido;
+            contenido = tmp;
+        }
+
+        // Copiar la línea al buffer final
+        for (int i = 0; i < len; i++) {
+            contenido[length++] = linea[i];
+        }
     }
+    contenido[length] = '\0';
+
     archivo.close();
 
-    cout << *archi << endl;
+    cout << "\nArchivo completo en memoria:" << endl;
+    cout << contenido << endl;
 
-    delete[] archi;
+    delete[] linea;
+    delete[] contenido;
 
     return 0;
 }
