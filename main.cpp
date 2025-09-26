@@ -4,53 +4,51 @@
 
 using namespace std;
 
+void aplicarXOR(char* data, int tam, unsigned char clave) {
+    for (int i = 0; i < tam; i++) {
+        unsigned char byte = static_cast<unsigned char>(data[i]);
+        data[i] = byte ^ clave;
+    }
+}
+
+void aplicarRotacionDerecha(char* data, int tam, int n) {
+    for (int i = 0; i < tam; i++) {
+        unsigned char byte = static_cast<unsigned char>(data[i]);
+        data[i] = (byte >> n) | (byte << (8 - n));
+    }
+}
+
 int main() {
-    ifstream archivo("Encriptado1.txt");
+    ifstream archivo("Encriptado1.txt", ios::binary);
+    const unsigned char claveXOR = 0x5A;
+
     if (!archivo.is_open()) {
         cout << "Falla al abrir el archivo." << endl;
         return 1;
     }
 
-    // Reservamos buffer temporal para cada línea
-    const int MAX_LINE = 1024;
-    char* linea = new char[MAX_LINE];
+    // Obtener tamaño del archivo
+    archivo.seekg(0, archivo.end);
+    int tam = archivo.tellg();
+    archivo.seekg(0, archivo.beg);
 
-    // Para guardar todo el archivo en memoria
-    int capacity = 4096;
-    char* contenido = new char[capacity];
-    int length = 0;
+    cout << "Este es el tamaño del archivo: " << tam << " bytes" << endl;
 
-    cout << "Contenido del archivo línea por línea:" << endl;
-
-    while (archivo.getline(linea, MAX_LINE)) {
-        cout << linea << endl;
-
-        int len = 0;
-        while (linea[len] != '\0') len++;
-
-        // Asegurar espacio suficiente en 'contenido'
-        if (length + len >= capacity) {
-            capacity *= 2;
-            char* tmp = new char[capacity];
-            for (int i = 0; i < length; i++) tmp[i] = contenido[i];
-            delete[] contenido;
-            contenido = tmp;
-        }
-
-        // Copiar la línea al buffer final
-        for (int i = 0; i < len; i++) {
-            contenido[length++] = linea[i];
-        }
-    }
-    contenido[length] = '\0';
-
+    // Reservar memoria y guardar el contenido del archivo
+    char* contenido = new char[tam];
+    archivo.read(contenido, tam);
     archivo.close();
 
-    cout << "\nArchivo completo en memoria:" << endl;
-    cout << contenido << endl;
+    ofstream nuevo("Nuevo.txt");
 
-    delete[] linea;
+    aplicarXOR(contenido, tam, claveXOR);
+
+    aplicarRotacionDerecha(contenido, tam, 3);
+
+    // Escribir el contenido en el nuevo archivo
+    nuevo.write(contenido, tam);
+    nuevo.close();
+
     delete[] contenido;
-
     return 0;
 }
