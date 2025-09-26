@@ -6,7 +6,7 @@
 
 // --- RLE Decompression ---
 char* decompressRLE(const char* input) {
-    int len = strlen(input);
+    int len = std::strlen(input);
     int outSize = 0;
 
     // Calcular tamaño de salida
@@ -72,9 +72,9 @@ char* decompressLZ78(const char* input, int pairsCount) {
         if (input[idx] == ';') idx++;
 
         // Construir nueva cadena
-        int prefixLen = (num > 0 && dict[num].str) ? strlen(dict[num].str) : 0;
+        int prefixLen = (num > 0 && dict[num].str) ? std::strlen(dict[num].str) : 0;
         char* newStr = new char[prefixLen + 2];
-        if (num > 0 && dict[num].str) strcpy(newStr, dict[num].str);
+        if (num > 0 && dict[num].str) std::strcpy(newStr, dict[num].str);
         newStr[prefixLen] = c;
         newStr[prefixLen + 1] = '\0';
         dict[k + 1].str = newStr;
@@ -84,11 +84,11 @@ char* decompressLZ78(const char* input, int pairsCount) {
         if (needed >= outCapacity) {
             outCapacity *= 2;
             char* tmp = new char[outCapacity];
-            memcpy(tmp, output, outLen);
+            std::memcpy(tmp, output, outLen);
             delete[] output;
             output = tmp;
         }
-        memcpy(output + outLen, newStr, prefixLen + 1);
+        std::memcpy(output + outLen, newStr, prefixLen + 1);
         outLen += prefixLen + 1;
     }
 
