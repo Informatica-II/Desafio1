@@ -4,4 +4,8 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        descompresion.cpp \
         main.cpp
+
+HEADERS += \
+    descompresion.h
