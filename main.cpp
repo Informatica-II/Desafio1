@@ -1,36 +1,54 @@
 #include <iostream>
 #include <fstream>
-#include <string>
+#include "descompresion.h"
 
 using namespace std;
 
-int main()
-{
-    ifstream archivo;
-    string linea;
-    int tam = 0;
+void aplicarXOR(char* data, int tam, unsigned char clave) {
+    for (int i = 0; i < tam; i++) {
+        unsigned char byte = static_cast<unsigned char>(data[i]);
+        data[i] = byte ^ clave;
+    }
+}
 
-    archivo.open("Encriptado1.txt");  //Abrir el archivo para lectura
+void aplicarRotacionDerecha(char* data, int tam, int n) {
+    for (int i = 0; i < tam; i++) {
+        unsigned char byte = static_cast<unsigned char>(data[i]);
+        data[i] = (byte >> n) | (byte << (8 - n));
+    }
+}
+
+int main() {
+    ifstream archivo("Encriptado1.txt", ios::binary);
+    const unsigned char claveXOR = 0x5A;
+
     if (!archivo.is_open()) {
         cout << "Falla al abrir el archivo." << endl;
-        return 1;  // Exit the program with an error code
+        return 1;
     }
+
+    // Obtener tamaño del archivo
     archivo.seekg(0, archivo.end);
-    tam = archivo.tellg();
+    int tam = archivo.tellg();
     archivo.seekg(0, archivo.beg);
-    cout << "Este es el tamanio: " << tam << endl;
 
-    string *archi = new string[tam];
+    cout << "Este es el tamaño del archivo: " << tam << " bytes" << endl;
 
-    while (getline(archivo, linea)) { // Lee línea por línea
-        *archi += linea;
-        //cout << linea << endl; // Muestra la línea en la consola
-    }
+    // Reservar memoria y guardar el contenido del archivo
+    char* contenido = new char[tam];
+    archivo.read(contenido, tam);
     archivo.close();
 
-    cout << *archi << endl;
+    ofstream nuevo("Nuevo.txt");
 
-    delete[] archi;
+    aplicarXOR(contenido, tam, claveXOR);
 
+    aplicarRotacionDerecha(contenido, tam, 3);
+
+    // Escribir el contenido en el nuevo archivo
+    nuevo.write(contenido, tam);
+    nuevo.close();
+
+    delete[] contenido;
     return 0;
 }
