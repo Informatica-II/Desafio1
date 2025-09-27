@@ -1,11 +1,12 @@
-// descompresion.h
 #ifndef DESCOMPRESION_H
 #define DESCOMPRESION_H
 
-#include <cstdlib>
-#include <cstring>
+// Descompresión RLE: trabaja con bloques de 3 bytes (binario).
+// Devuelve buffer dinámico terminado en '\0'. Caller debe liberar con delete[].
+char* decompressRLE(const char* input, int tamInput);
 
-char* decompressRLE(const char* input);
-char* decompressLZ78(const char* input, int pairsCount);
+// Descompresión LZ78: trabaja con bloques de 3 bytes (binario).
+// Devuelve buffer dinámico terminado en '\0'. Caller debe liberar con delete[].
+char* decompressLZ78(const char* input, int tamInput);
 
 #endif // DESCOMPRESION_H
