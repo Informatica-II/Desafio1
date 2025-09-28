@@ -31,10 +31,40 @@ static char* leerArchivoTexto(const char* nombre, int& tam) {
     return buf;
 }
 
+int leerNumero0a9() {
+    const int MAXL = 32;
+    char buf[MAXL];
+
+    while (true) {
+        cout << "¿Cuántos archivos desea evaluar? (0-9): ";
+        // leer línea segura desde stdin
+        if (!fgets(buf, MAXL, stdin)) {
+            // EOF o error de lectura
+            cout << "\nLectura interrumpida. Saliendo.\n";
+            return -1;
+        }
+
+        // quitar posible '\n' al final
+        size_t L = 0;
+        while (buf[L] != '\0') L++;
+        if (L > 0 && buf[L-1] == '\n') {
+            buf[L-1] = '\0';
+            L--;
+        }
+
+        // verificar longitud: debe ser exactamente 1 carácter (un dígito)
+        if (L == 1 && buf[0] >= '0' && buf[0] <= '9') {
+            return buf[0] - '0';
+        }
+
+        // Si llegó hasta aquí la entrada no es válida: mostrar mensaje y repetir
+        cout << "Entrada inválida. Por favor ingrese un número entre 0 y 9.\n";
+               }
+    }
+
 int main() {
-    int n;
-    cout << "¿Cuántos archivos desea evaluar? ";
-    cin >> n;
+    int n = leerNumero0a9();
+    //cout << "¿Cuántos archivos desea evaluar? ";
 
     for (int i = 1; i <= n; ++i) {
         char nombreEnc[64], nombrePista[64];
