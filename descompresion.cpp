@@ -1,8 +1,9 @@
 // descompresion.cpp
 #include "descompresion.h"
-#include <cstring> // para memcpy si se usa
+#include <cstring> //
 
-// Helpers mínimos
+// Helpers minimos
+// encuentra el tamaño del encriptado
 static size_t mi_strlen(const char* s) {
     size_t i = 0;
     if (!s) return 0;
@@ -10,7 +11,7 @@ static size_t mi_strlen(const char* s) {
     return i;
 }
 
-// copia segura con límite (tamDestino incluye espacio para '\0')
+// copia segura de buffer con límite
 static void mi_strcpy_seguro(char* dest, const char* src, size_t tamDestino) {
     if (!dest || !src || tamDestino == 0) return;
     size_t i = 0;
@@ -103,7 +104,7 @@ char* decompressLZ78(const char* input, int tamInput) {
             cadenaActual[0] = ch;
             cadenaActual[1] = '\0';
         } else {
-            int dictPos = index - 1; // friend used mapping like this
+            int dictPos = index - 1; // usando mapeo
             if (dictPos < 0 || dictPos >= nextIndex - 1 || dict[dictPos] == NULL) {
                 // formato inválido
                 // limpieza

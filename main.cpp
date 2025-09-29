@@ -36,7 +36,7 @@ int leerNumero0a9() {
     char buf[MAXL];
 
     while (true) {
-        cout << "¿Cuántos archivos desea evaluar? (0-9): ";
+        cout << "Cuantos archivos desea evaluar? (0-9): ";
         // leer línea segura desde stdin
         if (!fgets(buf, MAXL, stdin)) {
             // EOF o error de lectura
@@ -64,7 +64,6 @@ int leerNumero0a9() {
 
 int main() {
     int n = leerNumero0a9();
-    //cout << "¿Cuántos archivos desea evaluar? ";
 
     for (int i = 1; i <= n; ++i) {
         char nombreEnc[64], nombrePista[64];
@@ -96,8 +95,8 @@ int main() {
                                                &metodo, &rot, &k, &original);
         cout << "\n=== Caso " << i << " ===\n";
         if (ok) {
-            cout << "Compresión: " << metodo << endl;
-            cout << "Rotación: " << rot << endl;
+            cout << "Compresion: " << metodo << endl;
+            cout << "Rotacion: " << rot << endl;
             cout << "Key= 0x" << hex << (int)k << dec << endl;
             cout << "Texto original:\n" << original << endl;
 
